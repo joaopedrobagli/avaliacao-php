@@ -41,7 +41,10 @@ class ServiceController extends Controller
         $price = trim($_POST['price'] ?? '');
 
         // Validação dos campos obrigatórios, conforme o BDD.
-        if ($description === '' || $price === '' || !is_numeric($price)) {
+        // is_numeric sozinho deixaria passar preço negativo ou zero,
+        // então validamos "> 0" também (preço de serviço não pode ser
+        // negativo nem gratuito, faz parte da regra de negócio).
+        if ($description === '' || $price === '' || !is_numeric($price) || (float) $price <= 0) {
             // redirect() já usa caminho relativo; aqui mandamos a
             // mensagem de erro via query string pro Dashboard mostrar.
             $this->redirect('dashboard/index&erro=' . urlencode('Falha ao cadastrar serviço. Verifique os dados.'));
@@ -84,7 +87,7 @@ class ServiceController extends Controller
         $description = trim($_POST['description'] ?? '');
         $price = trim($_POST['price'] ?? '');
 
-        if ($description === '' || $price === '' || !is_numeric($price)) {
+        if ($description === '' || $price === '' || !is_numeric($price) || (float) $price <= 0) {
             $this->redirect('service/edit&id=' . $id . '&erro=' . urlencode('Preencha todos os campos corretamente.'));
             return;
         }

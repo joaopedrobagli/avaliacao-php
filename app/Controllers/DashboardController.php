@@ -3,7 +3,10 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\SmtpMailer;
+use App\Config\Mail;
 use App\Models\Service;
+use Exception;
 
 class DashboardController extends Controller
 {
@@ -85,16 +88,12 @@ class DashboardController extends Controller
     }
 
     /**
-     * Envia o email de aviso de finalização.
-     * Usamos a função nativa mail() do PHP (sem libs externas, já que
-     * não podemos usar Composer). Em XAMPP local isso normalmente não
-     * chega a enviar de verdade (precisa configurar SMTP no php.ini),
-     * mas a chamada está correta e funcionaria em um servidor com
-     * mail configurado.
+     * Envia o email de aviso de finalização via SMTP autenticado (Gmail).
+     * Se o envio falhar por qualquer motivo NÃO trava o fluxo de finalizar o serviço -
+     * só registra o erro.
      */
     private function enviarEmailFinalizacao(array $servico): void
     {
-        $para = $servico['user_email'];
         $assunto = 'Serviço finalizado - #' . $servico['id_service'];
 
         $corpo = "Olá, {$servico['user_name']}!\n\n"
@@ -102,10 +101,19 @@ class DashboardController extends Controller
             . "Valor: R$ " . number_format((float) $servico['price'], 2, ',', '.') . "\n"
             . "Comissão: R$ " . number_format((float) $servico['commission_user'], 2, ',', '.') . "\n";
 
-        $headers = 'From: nao-responda@jminformatica.com.br';
+        try {
+            $mailer = new SmtpMailer(
+                Mail::SMTP_HOST,
+                Mail::SMTP_PORT,
+                Mail::GMAIL_USER,
+                Mail::GMAIL_APP_PASSWORD
+            );
 
-        // @ suprime warning na tela caso o servidor local não tenha SMTP
-        // configurado; o fluxo do sistema não deve travar por isso.
-        @mail($para, $assunto, $corpo, $headers);
+            $mailer->send($servico['user_email'], $assunto, $corpo);
+        } catch (Exception $e) {
+            // Em produção isso iria para um arquivo de log.
+            // Aqui só evita que o erro quebre a tela do usuário.
+            error_log('Falha ao enviar email de finalização: ' . $e->getMessage());
+        }
     }
 }

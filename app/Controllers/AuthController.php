@@ -10,7 +10,7 @@ use App\Models\User;
  * decide o que fazer (chamando o Model quando precisa de dado do banco),
  * e decide qual view mostrar em seguida.
  *
- * Regra que seguimos aqui: Controller NUNCA escreve SQL. Quem faz isso
+ * Regra que é seguido aqui: Controller NUNCA escreve SQL. Quem faz isso
  * é o Model (App\Models\User).
  */
 class AuthController extends Controller

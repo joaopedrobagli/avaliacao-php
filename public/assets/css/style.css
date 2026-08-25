@@ -173,8 +173,8 @@ button:hover {
 /* ===== Filtros ===== */
 
 .form-filtros {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 14px;
     align-items: end;
     margin: 20px 0;
@@ -187,6 +187,8 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1 1 160px;
+    min-width: 160px;
 }
 
 .form-filtros .campo-filtro span {
@@ -207,6 +209,11 @@ button:hover {
 .form-filtros button {
     height: 38px;
     padding: 0 20px;
+    white-space: nowrap;
+}
+
+.campo-filtro--acao {
+    flex: 0 0 auto;
 }
 
 /* ===== Tabela de serviços ===== */

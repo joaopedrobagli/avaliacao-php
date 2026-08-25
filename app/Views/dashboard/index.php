@@ -99,7 +99,10 @@
                     <input type="date" name="data_fim" value="<?= htmlspecialchars($filtros['data_fim']) ?>">
                 </div>
 
-                <button type="submit">Filtrar</button>
+                <div class="campo-filtro campo-filtro--acao">
+                    <span aria-hidden="true">&nbsp;</span>
+                    <button type="submit">Filtrar</button>
+                </div>
             </form>
 
             <table class="tabela-servicos">
