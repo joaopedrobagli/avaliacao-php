@@ -7,7 +7,7 @@ use PDOException;
 
 /**
  * Responsável apenas por criar e devolver a conexão PDO.
- * Ajusta as credenciais conforme o ambiente local.
+ * Ajuste as credenciais abaixo conforme seu ambiente local.
  */
 class Database
 {
@@ -31,6 +31,7 @@ class Database
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]);
             } catch (PDOException $e) {
+                // Em produção isso deveria ir para um log, não pra tela.
                 die('Erro ao conectar ao banco: ' . $e->getMessage());
             }
         }

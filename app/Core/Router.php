@@ -3,8 +3,9 @@
 namespace App\Core;
 
 /**
- * Router mapeia "controller/action" vindo
- * da query string para uma chamada.
+ * Router simples, sem framework: mapeia "controller/action" vindo
+ * da query string para uma chamada de método real.
+ * Ex.: index.php?rota=auth/login
  */
 class Router
 {

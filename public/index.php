@@ -2,7 +2,8 @@
 
 session_start();
 
-// Autoload manual
+// Autoload manual (sem Composer): converte namespace App\Xxx\Yyy
+// em app/Xxx/Yyy.php
 spl_autoload_register(function (string $class): void {
     $prefix = 'App\\';
     if (strpos($class, $prefix) !== 0) {
@@ -18,10 +19,25 @@ spl_autoload_register(function (string $class): void {
 });
 
 use App\Core\Router;
+
 $router = new Router();
 
-// Rotas serão registradas aqui conforme os controllers.
-// Ex.: $router->add('auth/login', 'AuthController', 'login', 'GET');
+// Formato: $router->add('rota', 'NomeDoController', 'metodo', 'METODO_HTTP');
+// GET = mostrar uma tela | POST = processar um formulário
+$router->add('auth/login', 'AuthController', 'showLogin', 'GET');
+$router->add('auth/login', 'AuthController', 'login', 'POST');
+$router->add('auth/register', 'AuthController', 'showRegister', 'GET');
+$router->add('auth/register', 'AuthController', 'register', 'POST');
+$router->add('auth/logout', 'AuthController', 'logout', 'GET');
+
+$router->add('dashboard/index', 'DashboardController', 'index', 'GET');
+$router->add('dashboard/finalizar', 'DashboardController', 'finalizar', 'POST');
+$router->add('dashboard/excluir', 'DashboardController', 'excluir', 'POST');
+
+$router->add('service/create', 'ServiceController', 'showCreate', 'GET');
+$router->add('service/create', 'ServiceController', 'store', 'POST');
+$router->add('service/edit', 'ServiceController', 'showEdit', 'GET');
+$router->add('service/edit', 'ServiceController', 'update', 'POST');
 
 $rota = $_GET['rota'] ?? 'auth/login';
 $metodo = $_SERVER['REQUEST_METHOD'];
